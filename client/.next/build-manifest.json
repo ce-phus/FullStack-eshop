@@ -15,15 +15,20 @@
   ],
   "rootMainFiles": [],
   "pages": {
-    "/AccountPage": [
+    "/CartPage": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/AccountPage.js"
+      "static/chunks/pages/CartPage.js"
     ],
     "/OrdersListPage": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/OrdersListPage.js"
+    ],
+    "/ProductListPage": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/ProductListPage.js"
     ],
     "/_app": [
       "static/chunks/webpack.js",

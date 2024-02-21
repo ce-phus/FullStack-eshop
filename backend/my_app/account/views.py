@@ -133,7 +133,7 @@ class UserAccountDeleteView(APIView):
 # Get billing address (details of user addres, all addresses)
 class UserAddressessListView(APIView):
     def get(self, request):
-        user = request.user
+        user = request.user.id
         user_address = BillingAddress.objects.filter(user=user)
         serializer = BillingAddressSerializer(user_address, many=True)
 
@@ -148,21 +148,23 @@ class UserAddressDetailsView(APIView):
 
 # create billing address
 class CreateUserAddressView(APIView):
+
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         data = request.data
-
+        
         new_address = {
             "name": request.data["name"],
             "user": request.user.id,
             "phone_number": request.data["phone_number"],
-            # "pin_code": request.data["pin_code"],
-            # "house_no": request.data["house_no"],
-            # "landmark": request.data["landmark"],
+            "pin_code": request.data["pin_code"],
+            "house_no": request.data["house_no"],
+            "landmark": request.data["landmark"],
             "city": request.data["city"],
             "state": request.data["state"],
         }
+
         serializer = BillingAddressSerializer(data=new_address, many=False)
         if serializer.is_valid():
             serializer.save()

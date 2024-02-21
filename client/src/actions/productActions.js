@@ -35,7 +35,13 @@ export const getProductsList = () => async (dispatch)=> {
             type: PRODUCTS_LIST_REQUEST
         })
         //  CALL API
-        const { data } = await axios.get("http://127.0.0.1:8000/api/products/")
+        const { data } = await axios.get("http://127.0.0.1:8000/api/products/",{
+            method: 'POST',
+            mode: 'cors',
+            headers:{
+                'Content-type': 'application/json'
+            }
+        })
         console.log("data") 
 
         dispatch({

@@ -10,17 +10,32 @@ from .access_token import MpesaGateway
 
 gateway = MpesaGateway()
 
+from product.models import Product
+
+logger = logging.getLogger(__name__)  # Create logger instance
+
 @authentication_classes([])
 @permission_classes((AllowAny,))
 class MPesaCheckout(APIView):
-    serializer = MpesaCheckoutSerializer
+    serializer_class = MpesaCheckoutSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer= self.serializer(data=request)
-
+        product_id = kwargs.get('id')  # Get product ID from URL parameters
+        logger.info("Received payload: {}".format(request.data))
+        try:
+            product = Product.objects.get(id=product_id)
+        except Product.DoesNotExist:
+            return Response({"detail": "Product not found"}, status=404)
+        
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            payload= {"data": serializer.validated_data, "request": request}
+            payload = {
+                "data": serializer.validated_data,
+                "product": product,  # Pass the product object to the payload
+                "request": request
+            }
             res = gateway.stk_push_request(payload)
+            return Response(res)
 
 @authentication_classes([])
 @permission_classes((AllowAny,))

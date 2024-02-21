@@ -4,26 +4,30 @@ import logo2 from '../../public/images/gallery/logo6.png'
 import { TwitterIcon, WhatsappIcon, TelephoneIcon, LinkedInIcon } from './Icons'
 import Image from 'next/image'
 import Layout from './Layout'
+import   icon1 from '../../public/assets/instagram.svg'
+import   icon2 from '../../public/assets/facebook.svg'
+import   icon3 from '../../public/assets/linkedin.svg'
+import   icon4 from '../../public/assets/twitter.svg'
 
 export const socialMedia = [
     {
       id: "social-media-1",
-      icon: WhatsappIcon,
+      icon: icon1,
       link: "https://www.instagram.com/",
     },
     {
       id: "social-media-3",
-      icon: TwitterIcon,
+      icon: icon4,
       link: "https://www.twitter.com/",
     },
     {
       id: "social-media-4",
-      icon: LinkedInIcon,
+      icon: icon3,
       link: "https://www.linkedin.com/",
     },
     {
         id: "social-media-4",
-        icon: TelephoneIcon,
+        icon: icon2,
         link: "https://www.linkedin.com/",
       },
   ];

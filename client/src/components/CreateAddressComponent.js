@@ -46,139 +46,85 @@ const CreateAddressComponent = ({ toggleCreateAddress }) => {
     }
 
     return (
-        <div>
-            <p className="text-center text-info"><em>New Address</em></p>
+        <div className='grid justify-items-center'>
+            <p className="text-center text-semibold"><em>New Address</em></p>
             {errorCreatingAddress
                 ? <Message variant='danger'>
                     {errorCreatingAddress}
                 </Message>
                 :
                 ""}
-            <Card
-                className="mx-auto mb-4"
-                style={{ width: "50%", border: "1px solid", borderColor: "#C6ACE7" }}
-            >
-                <Card.Body>
-                    <Form onSubmit={addressSubmitHandler}>
+                <form className='text-light w-full max-w-lg'
+                onSubmit={addressSubmitHandler}>
+                <div className='flex flex-wrap -mx-3 mb-6'>
+                    <div className='w-full md:w-1/2 px-3 pl-10 pt-10 mb-6 md:mb-0'>
+                        <label className='block uppercase tracking-wide text-light-700 text-xs font-bold mb-2' for='grid-first-name'>
+                            Name
+                        </label>
+                        <input className='appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 pl-10 mb-3 leading-tight focus:outline-none focude:bg-white' id='grid-first-name' type='text' placeholder='Jane' value={name}
+                        onChange={(e)=> setName(e.target.value)}></input>
+                        <p className='text-red-500 text-xs italic'>Please fill out this field.</p>
+                    </div>
+                    <div className='w-full md:w-1/2 px-3 pt-10 pl-10'>
+                        <label className='block uppercase tracking-wide text-light-700 text-xs font-bold mb-2 ' for='grid-phonenumber'>
+                            Phone Number
+                        </label>
+                        <input className='appearance-none block w-full px-4 py-3 bg-gray-200 text-gray-700 border border-gray-200 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500' id='grid-phone-number' type='text' placeholder='phone number' onChange={(e) => setPhoneNumber(e.target.value)}></input>
+                    </div>
+                </div>
+                <div className='flex flex-wrap -mx-3 mb-6'>
+                    <div className='w-full px-3 pl-10'>
+                        <label className='block uppercase tracking-wide text-light-700 text-xs font-bold mb-2' for='grid-pin-code'>
+                            Pin Code
+                        </label>
+                        <input className='appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500' type='text' placeholder='pin code' value={pinCode} pattern='[0-9]+' maxLength='6' onChange={(e) => setPinCode(e.target.value)}></input>
+                    </div>
+                    <div class="w-full  px-3 mb-6 md:mb-0 pl-10">
+                <label class="block uppercase tracking-wide text-light-700 text-xs font-bold mb-2" for="grid-zip">
+                    landmark
+                </label>
+                <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" type="text" placeholder="landmark" value={landmark}
+                                onChange={(e) => setLandmark(e.target.value)}/>
+                </div>
+                </div>
+                <div class="flex flex-wrap -mx-3 mb-2">
+                    <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0 pl-10">
+                <label class="block uppercase tracking-wide text-light-700 text-xs font-bold mb-2" for="grid-zip">
+                    House No./Address
+                </label>
+                <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" type="text" placeholder="90210" value={houseNumber}
+                                onChange={(e) => setHouseNumber(e.target.value)}/>
+                </div>
 
-                        <Form.Group controlId='name'>
-                            <Form.Label>
-                                Name
-                            </Form.Label>
-                            <Form.Control
-                                autoFocus={true}
-                                type="text"
-                                placeholder="enter your name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            >
-                            </Form.Control>
-                        </Form.Group>
-
-                        <Form.Group controlId='phoneNumber'>
-                            <Form.Label>
-                                Phone Number
-                            </Form.Label>
-                            <InputGroup>
-                                <InputGroup.Text>+91</InputGroup.Text>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="phone number"
-                                    pattern="[0-9]+"
-                                    maxLength="10"
-                                    value={phoneNumber}
-                                    onChange={(e) => setPhoneNumber(e.target.value)}
-                                >
-                                </Form.Control>
-                            </InputGroup>
-                        </Form.Group>
-
-                        <Form.Group controlId='pinCode'>
-                            <Form.Label>
-                                Pin Code
-                            </Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="pin code"
-                                value={pinCode}
-                                pattern="[0-9]+"
-                                maxLength="6"
-                                onChange={(e) => setPinCode(e.target.value)}
-                            >
-                            </Form.Control>
-                        </Form.Group>
-
-                        <Form.Group controlId='houseNumber'>
-                            <Form.Label>
-                                House No./Address
-                            </Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="house number"
-                                value={houseNumber}
-                                onChange={(e) => setHouseNumber(e.target.value)}
-                            >
-                            </Form.Control>
-                        </Form.Group>
-
-                        <Form.Group controlId='landmark'>
-                            <Form.Label>
-                                Landmark
-                            </Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="landmark"
-                                value={landmark}
-                                onChange={(e) => setLandmark(e.target.value)}
-                            >
-                            </Form.Control>
-                        </Form.Group>
-
-                        <Form.Group controlId='city'>
-                            <Form.Label>
-                                City
-                            </Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="city"
-                                value={city}
-                                onChange={(e) => setCity(e.target.value)}
-                            >
-                            </Form.Control>
-                        </Form.Group>
-
-                        <Form.Group controlId='state'>
-                            <Form.Label>
-                                State
-                            </Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="state"
-                                value={state}
-                                onChange={(e) => setState(e.target.value)}
-                            >
-                            </Form.Control>
-                        </Form.Group>
-
-                        <Button
-                            style={{ width: "100%" }}
-                            className="btn-sm"
-                            type="submit"
-                            variant="success"
-                        >
-                            Save Address
-                        </Button>
-                        <Button
-                            style={{ width: "100%" }}
-                            className="btn-sm mt-2"
-                            variant="primary"
-                            onClick={() => toggleCreateAddress()}>
-                            Cancel
-                        </Button>
-                    </Form>
-
-                </Card.Body>
-            </Card>
+                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0 pt-4 pl-10">
+                <label class="block uppercase tracking-wide text-light-700 text-xs font-bold mb-2" for="grid-city">
+                STATE
+                </label>
+                <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-city" type="text" placeholder="Nairobi" value={state}
+                                onChange={(e) => setState(e.target.value)}/>
+                </div>
+                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0 pt-4 pl-10">
+                <label class="block uppercase tracking-wide text-light-700 text-xs font-bold mb-2" for="grid-state">
+                    City
+                </label>
+                <div class="relative">
+                    <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" type='text' value={city} onChange={(e) => setCity(e.target.value)}>
+                    <option>Nairobi</option>
+                    <option>Bungoma</option>
+                    <option>Nyeri</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
+                </div>
+                
+                    </div>
+                    <button style={{width: "30%"}}
+                    className='bg-sky-500/50 hover:bg-blue-700 text-light font-bold py-2 px-4 rounded-full ' type='submit'>Save Address</button>
+                    <button className='bg-sky-500/50 hover:bg-blue-700 text-light font-bold rounded-full py-2 px-4 ml-20' style={{width: '20%'}}>Cancel</button>
+                </form>
+            
         </div>
     )
 }

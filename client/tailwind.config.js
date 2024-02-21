@@ -21,6 +21,7 @@ module.exports = {
          primary: "#ee7600", // 240,86,199
          primaryDark: "#FFA500", // 80,230,217
          accent: '#5d0076',
+         danger: "#FF0000"
        },
        backgroundImage: {
         "hero-pattern": "url('../../public/images/gallery/herobg.png')",

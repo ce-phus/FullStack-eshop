@@ -1,65 +1,57 @@
-import React, { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { Card } from 'react-bootstrap'
-import { getAllAddress } from '../actions/userActions'
-import { useRouter } from 'next/router'
-
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { getAllAddress } from '../actions/userActions';
+import { useRouter } from 'next/router';
 
 function UserAddressComponent({ handleAddressId }) {
+    const dispatch = useDispatch();
+    const history = useRouter();
 
-    let history = useRouter()
-    const dispatch = useDispatch()
+    const updateHandleAddressId = (id) => {
+        handleAddressId(id);
+    };
 
-    const updatehandleAddressId = (id) => {
-        handleAddressId(id)
-    }
+    const userLoginReducer = useSelector(state => state.userLoginReducer);
+    const { userInfo } = userLoginReducer;
 
-    // login reducer
-    const userLoginReducer = useSelector(state => state.userLoginReducer)
-    const { userInfo } = userLoginReducer
-
-    // get address list reducer
-    const getAllAddressesOfUserReducer = useSelector(state => state.getAllAddressesOfUserReducer)
-    const { addresses } = getAllAddressesOfUserReducer
+    const getAllAddressesOfUserReducer = useSelector(state => state.getAllAddressesOfUserReducer);
+    const { addresses } = getAllAddressesOfUserReducer;
 
     useEffect(() => {
         if (!userInfo) {
-            history.push("/LoginPage")
+            history.push("/LoginPage");
         } else {
-            dispatch(getAllAddress())
+            dispatch(getAllAddress());
         }
-    }, [dispatch, history, userInfo])
-
+    }, [dispatch, history, userInfo]);
 
     return (
-        <div>
-            {addresses ? addresses.map((address, idx) => (
-                <div key={idx}>
-                    <Card
-                        className="p-2 mb-2"
-                        style={{ border: "1px solid", borderColor: "#C6ACE7" }}
-                        key={address.id}
-
-                    >
-                        <input
-                            type="radio"
-                            name="addressId"
-                            value={0}
-                            onClick={() => updatehandleAddressId(address.id)}
-                        />                        
-                        <span><b>Name: </b>{address.name}</span>
-                        <span><b>Address: </b>
-                        {address.house_no}, {address.landmark}, {address.city}, 
-                        {address.state}, {address.pin_code}</span>
-                    </Card>
-                </div>
-            ))
-                :
+        <div className="text-light mt-10 grid place-items-center">
+            {addresses ? (
+                addresses.map((address, idx) => (
+                    <div key={idx}>
+                        <div className="p-2  border border-purple-500 rounded-lg">
+                            <label className="flex items-center">
+                                <input
+                                    type="radio"
+                                    name="addressId"
+                                    value={0}
+                                    onClick={() => updateHandleAddressId(address.id)}
+                                    className="mr-2"
+                                />
+                                <div>
+                                    <p><b>Name: </b>{address.name}</p>
+                                    <p><b>Address: </b>{address.house_no}, {address.landmark}, {address.city}, {address.state}, {address.pin_code}</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                ))
+            ) : (
                 "empty"
-            }
-
-        </div >
-    )
+            )}
+        </div>
+    );
 }
 
-export default UserAddressComponent
+export default UserAddressComponent;

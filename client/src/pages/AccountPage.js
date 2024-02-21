@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { userDetails, logout, checkTokenValidation } from '../actions/userActions'
 //import { UPDATE_USER_ACCOUNT_RESET } from '../constants'
 import Message from '../components/Message'
-import { Spinner } from 'react-bootstrap'
+import Spinner from '../components/Spinner' 
 import { useRouter } from 'next/router' 
 
 
@@ -56,34 +56,38 @@ function AccountPage() {
         try {
 
             return (
-                <div>
-                    {loading && <span style = {{ display: "flex" }}><h5>Getting User Information</h5><span className = "ml-2"><Spinner animation="border" /></span></span>}
-                    <Container>
-                        <Row className="mr-6 mb-2 border border-dark">
-                            <Col xs={2} className="p-3 bg-info text-white">Name:</Col>
-                            <Col className="p-3">{userAccDetails.username}</Col>
-                        </Row>
-                        <Row className="mb-2 border border-dark">
-                            <Col xs={2} className="p-3 bg-info text-white">Email:</Col>
-                            <Col className="p-3">{userAccDetails.email}</Col>
-                        </Row>
-                        <Row className="mb-2 border border-dark">
-                            <Col xs={2} className="p-3 bg-info text-white">Admin Privileges:</Col>
-                            <Col className="p-3">{userAccDetails.admin ? "Yes" : "No"}</Col>
-                        </Row>
-                    </Container>
-                    <span style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <Link href=''>Update Account details</Link>
-                        <span className="ml-1 text-primary">| </span>
+                   
+                    
+                        <div className='text-light pl-10 pt-10 pr-10 grid h-screen place-items-center'>
+                    {loading && <span style = {{ display: "flex" }}><h5>Getting User Information</h5><span className = "ml-2"><Spinner/></span></span>}
+                    <div className='container mx-auto items-center grid justify-items-center border border-2 rounded-md bg-gray-700' style={{width: '30%'}}>
+                        <div className='grid grid-rows-1 grid-cols-2 gap-4 pt-4'>
+                            <div className='text-light p-3 text-semibold'>Name:</div>
+                            <div className='p-3 text-light'>{userAccDetails.username}</div>
+                        </div>
+                        <div className='grid grid-rows-1 grid-cols-2 gap-4'>
+                            <div className='text-light p-3 text-semibold'>Email:</div>
+                            <div className='p-3 text-light'>{userAccDetails.email}</div>
+                        </div>
+                        <div className='grid grid-rows-1 grid-cols-2 gap-4 mb-3'>
+                            <div className='text-light p-3 text-semibold'>Admin Priviledges:</div>
+                            <div className='p-3 text-light'>{userAccDetails.admin ? "Yes" : "No"}</div>
+                        </div>
+                        <span style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Link href={`/AccountUpdatePage`} className='text-accent pb-5'>Update Account details</Link>
+                        <span className="ml-1 text-primary pb-5">| </span>
                         <span className="ml-1"></span>
 
-                        <Link href=''>Delete Account</Link>
+                        <Link href={`/DeleteUserAccountPage`} className='text-primary pb-5'>Delete Account</Link>
                     </span>
+                    </div>
                 </div>
+                    
+                
             )
         } catch (error) {
-            return <Message variant='danger'>Something went wrong, go back to <Link href='/LoginPage'
-                onClick={logoutHandler} to={`/LoginPage`}
+            return <Message variant='danger text-light'>Something went wrong, go back to <Link href='/LoginPage'
+                onClick={logoutHandler}
             > Login</Link> page.</Message>
         }
     }

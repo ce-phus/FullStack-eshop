@@ -1,150 +1,145 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { checkTokenValidation, getAllOrders, logout } from '../actions/userActions'
-import { useRouter } from 'next/router'
-// import { useHistory } from 'react-router-dom'
-import { Table, Spinner } from 'react-bootstrap'
-import { dateCheck } from '../components/GetDate'
-import { changeDeliveryStatus } from '../actions/productActions'
-import { CHANGE_DELIVERY_STATUS_RESET } from '../constants'
-import SearchBarForOrdersPage from '../components/SearchBarForOrdersPage'
-import Message from '../components/Message'
-
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { checkTokenValidation, getAllOrders, logout } from '../actions/userActions';
+import { useRouter } from 'next/router';
+import { dateCheck } from '../components/GetDate';
+import { changeDeliveryStatus } from '../actions/productActions';
+import { CHANGE_DELIVERY_STATUS_RESET } from '../constants';
+import SearchBarForOrdersPage from '../components/SearchBarForOrdersPage';
+import Message from '../components/Message';
+import Spinner from '../components/Spinner';
 
 function OrdersListPage() {
+    let history = useRouter();
+    const dispatch = useDispatch();
+    const placeholderValue = "Search orders by Customer Name, Address or by Ordered Item";
 
-    let history = useRouter()
-    const dispatch = useDispatch()
-    const placeholderValue = "Search orders by Customer Name, Address or by Ordered Item"
+    const todays_date = dateCheck(new Date().toISOString().slice(0, 10));
 
-    const todays_date = dateCheck(new Date().toISOString().slice(0, 10))
+    const [currentDateInfo] = useState(todays_date);
+    const [idOfchangeDeliveryStatus, setIdOfchangeDeliveryStatus] = useState(0);
+    const [cloneSearchTerm, setCloneSearchTerm] = useState("");
 
-    const [currentDateInfo] = useState(todays_date)
-    const [idOfchangeDeliveryStatus, setIdOfchangeDeliveryStatus] = useState(0)
-    const [cloneSearchTerm, setCloneSearchTerm] = useState("")
+    const userLoginReducer = useSelector(state => state.userLoginReducer);
+    const { userInfo } = userLoginReducer;
 
-    // login reducer
-    const userLoginReducer = useSelector(state => state.userLoginReducer)
-    const { userInfo } = userLoginReducer
+    const getAllOrdersReducer = useSelector(state => state.getAllOrdersReducer);
+    const { orders, loading: loadingOrders } = getAllOrdersReducer;
 
-    // get all orders reducer
-    const getAllOrdersReducer = useSelector(state => state.getAllOrdersReducer)
-    const { orders, loading: loadingOrders } = getAllOrdersReducer
+    const changeDeliveryStatusReducer = useSelector(state => state.changeDeliveryStatusReducer);
+    const { success: deliveryStatusChangeSuccess, loading: deliveryStatusChangeSpinner } = changeDeliveryStatusReducer;
 
-    // change delivery status reducer
-    const changeDeliveryStatusReducer = useSelector(state => state.changeDeliveryStatusReducer)
-    const { success: deliveryStatusChangeSuccess, loading: deliveryStatusChangeSpinner } = changeDeliveryStatusReducer
-
-    // check token validation reducer
-    const checkTokenValidationReducer = useSelector(state => state.checkTokenValidationReducer)
-    const { error: tokenError } = checkTokenValidationReducer
+    const checkTokenValidationReducer = useSelector(state => state.checkTokenValidationReducer);
+    const { error: tokenError } = checkTokenValidationReducer;
 
     useEffect(() => {
         if (!userInfo) {
-            history.push("/login")
+            history.push("/login");
         } else {
-            dispatch(checkTokenValidation())
-            dispatch(getAllOrders())
+            dispatch(checkTokenValidation());
+            dispatch(getAllOrders());
         }
-    }, [userInfo, dispatch, history])
+    }, [userInfo, dispatch, history]);
 
     if (userInfo && tokenError === "Request failed with status code 401") {
-        alert("Session expired, please login again.")
-        dispatch(logout())
-        history.push("/login")
-        window.location.reload()
+        alert("Session expired, please login again.");
+        dispatch(logout());
+        history.push("/login");
+        window.location.reload();
     }
 
     const changeDeliveryStatusHandler = (id, status) => {
-        setIdOfchangeDeliveryStatus(id)
+        setIdOfchangeDeliveryStatus(id);
         const productData = {
             "is_delivered": status,
             "delivered_at": status ? currentDateInfo : "Not Delivered"
-        }
-        dispatch(changeDeliveryStatus(id, productData))
-    }
+        };
+        dispatch(changeDeliveryStatus(id, productData));
+    };
 
     if (deliveryStatusChangeSuccess) {
-        alert("Delivery status changed successfully")
+        alert("Delivery status changed successfully");
         dispatch({
             type: CHANGE_DELIVERY_STATUS_RESET
-        })
-        dispatch(getAllOrders())
+        });
+        dispatch(getAllOrders());
     }
 
     const handleSearchTerm = (term) => {
-        setCloneSearchTerm(term)
+        setCloneSearchTerm(term);
     };
 
-
     return (
-        <div>
-            {loadingOrders && <span style={{ display: "flex" }}>
-                <h5>Getting Orders</h5>
-                <span className="ml-2">
-                    <Spinner animation="border" />
+        <div className="grid h-screen place-items-center relative overflow-x-auto shadow-md sm:rounded-lg m-10">
+            {loadingOrders && (
+                <span style={{ display: "flex" }}>
+                    <h5>Getting Orders</h5>
+                    <span className="ml-2">
+                        {/* <Spinner animation="border" /> */}
+                    </span>
                 </span>
-            </span>}
-            {userInfo.admin && <SearchBarForOrdersPage handleSearchTerm={handleSearchTerm} placeholderValue={placeholderValue} />}
-                {orders.length > 0 ?
-                <Table className="mt-2" striped bordered>
-                    <thead>
-                        <tr className="p-3 bg-info text-white text-center">
-                            <th>Order Id</th>
-                            <th>Customer Name</th>
-                            <th>Card Used</th>
-                            <th>Delivery Address</th>
-                            <th>Ordered Item</th>
-                            <th>Paid Status</th>
-                            <th>Paid On</th>
-                            <th>Total Amount</th>
-                            <th>Delivered Status</th>
-                            <th>Delivered On</th>
-                            {userInfo.admin &&
-                                <th>Delivery Status</th>
-                            }
+            )}
+            {userInfo && userInfo.admin && <SearchBarForOrdersPage handleSearchTerm={handleSearchTerm} placeholderValue={placeholderValue} />}
+            {orders.length > 0 ? (
+                <table className="w-full text-left trl:text-right bg-gray-700 overflow-hidden shadow rounded-lg">
+                    <thead className="bg-gray-700 text-gray-700">
+                        <tr>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Order Id
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Customer Name
+                            </th>
+                            
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                               Ordered Items
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Paid Status
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Paid on
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Total Amount
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Delivered Status
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Delivered On
+                            </th>
+                            {/* Add other table headings here */}
                         </tr>
                     </thead>
-
-                    {/* filter orders by name, address or ordered item */}
-
                     {orders.filter((item) => (
-
-                        item.name.toLowerCase().includes(cloneSearchTerm)
-                        ||
-                        item.ordered_item.toLowerCase().includes(cloneSearchTerm)
-                        ||
+                        item.name.toLowerCase().includes(cloneSearchTerm) ||
+                        item.ordered_item.toLowerCase().includes(cloneSearchTerm) ||
                         item.address.toLowerCase().includes(cloneSearchTerm)
-                    )
+                    )).map((order, idx) => (
+                        <tbody key={idx} className="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td className="px-6 py-4 whitespace-nowrap">{order.id}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">{order.name}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">{order.ordered_item}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">{order.paid_status ? (
+                                <input disabled checked id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600  border-gray-700 rounded focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 " />
+                            ) : (
+                                <input disabled checked id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-600 ring-offset-gray-800 focus:ring-2" />
+                            )}</td>
 
-                    ).map((order, idx) => (
-                        <tbody key={idx}>
-                            <tr className="text-center">
-                                <td>
-                                    {order.id}
-                                </td>
-                                <td>{order.name}</td>
-                                <td>{order.card_number}</td>
-                                <td>{order.address}</td>
-                                <td>{order.ordered_item}</td>
-                                <td>{order.paid_status ?
-                                    <i className="fas fa-check-circle text-success"></i>
-                                    :
-                                    <i className="fas fa-times-circle text-danger"></i>
-                                }</td>
-                                <td>{dateCheck(order.paid_at)}</td>
-                                <td>{order.total_price} INR</td>
-                                <td>{order.is_delivered ?
-                                    <i className="fas fa-check-circle text-success"></i>
-                                    :
-                                    <i className="fas fa-times-circle text-danger"></i>
-                                }</td>
-                                <td>{order.delivered_at}</td>
-                                {userInfo.admin &&
-                                    <td>
-                                        {order.is_delivered ?
+                                <td className="px-6 py-4 whitespace-nowrap">{order.paid_at}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">{order.total_price}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">{order.is_delivered ? (
+                                <input disabled checked id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600  border-gray-700 rounded focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 " />
+                            ) : (
+                                <input disabled checked id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-600 ring-offset-gray-800 focus:ring-2" />
+                            )}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">{order.delivered_at}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                {order.is_delivered ?
                                             <button
-                                                className="btn btn-outline-danger btn-sm"
+                                                className="bg-red-600 hover:bg-red-700 focus:ring-blue-800 rounded-lg font-medium text-sm px-5 py-2.5 text-center"
                                                 onClick={() => changeDeliveryStatusHandler(order.id, false)}
                                             >
                                                 {deliveryStatusChangeSpinner
@@ -157,27 +152,35 @@ function OrdersListPage() {
                                             </button>
                                             :
                                             <button
-                                                className="btn btn-outline-primary btn-sm"
+                                                className="bg-blue-600 hover:bg-blue-700 focus:ring-blue-800 rounded-lg font-medium text-sm px-5 py-2.5 text-center"
                                                 onClick={() => changeDeliveryStatusHandler(order.id, true)}
                                             >
                                                 {deliveryStatusChangeSpinner
                                                     &&
                                                     idOfchangeDeliveryStatus === order.id
                                                     ?
-                                                    <Spinner animation="border" />
+                                                    <Spinner/>
                                                     :
                                                     "Mark as delivered"}
                                             </button>
                                         }
-                                    </td>
-                                }
+                                
+                                
+                                </td>
+                                
+                                {/* Add other table cells here */}
                             </tr>
                         </tbody>
                     ))}
-                </Table>
-                : <Message variant="info">No orders yet.</Message> }
+                </table>
+            ) : (
+                <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
+                <p class="font-bold text-3xl">No orders yet !!</p>
+                <p>Make Order</p>
+              </div>
+            )}
         </div>
-    )
+    );
 }
 
-export default OrdersListPage
+export default OrdersListPage;

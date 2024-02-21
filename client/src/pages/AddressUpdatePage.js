@@ -71,7 +71,7 @@ const AddressUpdatePage = ({ match }) => {
         dispatch({
             type: UPDATE_USER_ADDRESS_RESET
         })
-        history.push("/all-addresses/")
+        history.push("/AllAddressesOfUserPage")
         dispatch(getAllAddress())
     }
 

@@ -79,89 +79,70 @@ function AccountUpdatePage() {
         dispatch({
             type: UPDATE_USER_DETAILS_RESET
         })
-        history.push("/account/")
+        history.push("/AccountPage")
         dispatch(userDetails(userInfo.id))
     }
 
     const renderData = () => {
         try {
             return (
-                <div>
+
+                <>
+                   <Head>
+                    <title>account-update</title>
+                        <meta name="description" content="AccountUpdate" />
+                    </Head> 
+
+    <div className='grid justify-items-center h-screen place-items-center'>
                     <Row className='justify-content-md-center'>
                         <Col xs={12} md={6}>
                             <span
-                                className="d-flex justify-content-center"
+                                className="d-flex justify-content-center italic font-semibold"
                                 style={{ display: "flex", marginBottom: "15px", color: "#008080" }}>
-                                <em>Update User Details</em>
+                                Update User Details
                             </span>
                             {loading && <Spinner animation="border" />}
-                            <Form onSubmit={onSubmit}>
-
-                                <Form.Group controlId='username'>
-                                    <Form.Label>
+                            <form className='max-w-sm mx-auto' onSubmit={onSubmit}>
+                                <div className='mb-5'>
+                                    <label for='username' className='block mb-2 text-sm font-medium text-light'>
                                         Username
-                                    </Form.Label>
-                                    <Form.Control
-                                        autoFocus={true}
-                                        type="text"
-                                        defaultValue={userAccDetails.username}
-                                        placeholder="username"
-                                        onChange={(e) => setUsername(e.target.value)}
-                                    >
-                                    </Form.Control>
-                                </Form.Group>
-
-                                <Form.Group controlId='email'>
-                                    <Form.Label>
+                                    </label>
+                                    <input type='text' autoFocus={true} defaultValue={userAccDetails.username} placeholder='username' onChange={(e) => setUsername(e.target.value)} className='bg-gray-700 border border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'></input>
+                                </div>
+                                <div className='mb-5'>
+                                    <label for='email-address' className='block mb-2 text-sm font-medium text-light'>
                                         Email Address
-                                    </Form.Label>
-                                    <Form.Control
-                                        type="email"
-                                        placeholder="enter email"
-                                        defaultValue={userAccDetails.email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                    >
-                                    </Form.Control>
-                                </Form.Group>
-
-                                <Form.Group controlId='password'>
-                                    <Form.Label>
-                                        Reset-Password
-                                    </Form.Label>
-                                    <Form.Control
-                                        type="password"
-                                        placeholder="enter new password"
-                                        onChange={(e) => setPassword(e.target.value)}
-                                    >
-                                    </Form.Control>
-                                </Form.Group>
-
-                                <Form.Group controlId='confirmPassword'>
-                                    <Form.Label>
+                                    </label>
+                                    <input type='text' autoFocus={true} defaultValue={userAccDetails.email} placeholder='enter email' onChange={(e) => setEmail(e.target.value)} className='bg-gray-700 border border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'></input>
+                                </div>
+                                <div className='mb-5'>
+                                    <label for='username' className='block mb-2 text-sm font-medium text-light'>
+                                        Reset Password
+                                    </label>
+                                    <input type='text' autoFocus={true}  placeholder='password' onChange={(e) => setPassword(e.target.value)} className='bg-gray-700 border border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'></input>
+                                </div>
+                                <div className='mb-5'>
+                                    <label for='username' className='block mb-2 text-sm font-medium text-light'>
                                         Confirm Password
-                                    </Form.Label>
-                                    <Form.Control
-                                        type="password"
-                                        placeholder="confirm new password"
-                                        onChange={(e) => setConfirmPassword(e.target.value)}
-                                    >
-                                    </Form.Control>
-                                </Form.Group>
-
-                                <Button type="submit" variant='success' className="btn-sm">Save Changes</Button>
-                                <Link href={`/account`}>
-                                    <button className="btn btn-primary btn-sm ml-2" type="button">
+                                    </label>
+                                    <input type='text' autoFocus={true} placeholder='confirm new password' onChange={(e) => setConfirmPassword(e.target.value)} className='bg-gray-700 border border-gray-600 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'></input>
+                                </div>
+                                <button type='submit' variant='success' className='text-light bg-blue-600 hover:bg-blue-700 focus:ring-blue-800 text-center px-5 py-2.5 sm:w-auto w-1/2 text-sm fornt-medium rounded-lg'>Save Changes</button>
+                                <Link href={`/AccountPage`}>
+                                    <button className="font-medium bg-purple-600 rounded-lg px-5 py-2.5 ml-5 hover:bg-purple-700 focus:ring-purple-900 text-sm text-light" type="button">
                                         Cancel
                                     </button>
                                 </Link>
-                            </Form>
+                            </form>
                         </Col>
                     </Row>
                 </div>
+                </>
+                
             )
         } catch (error) {
             return <Message variant='danger'>Something went wrong, go back to <Link
-                onClick={logoutHandler} to={`/LoginPage`}
+                onClick={logoutHandler} href='/LoginPage'
             > Login</Link> page.</Message>
         }
     }

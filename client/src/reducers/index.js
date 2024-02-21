@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 
 import {
     productsListReducer,
-    productDetailReducer,
+    productDetailsReducer,
     createProductReducer,
     deleteProductReducer,
     changeDeliveryStatusReducer,
@@ -28,9 +28,13 @@ import {
     mpesaStkPushReducer
 } from "./mpesaReducers"
 
+import {
+    cartReducer,
+} from "./cartReducers"
+
 const allReducers = combineReducers({
     productsListReducer,
-    productDetailReducer,
+    productDetailsReducer,
     createProductReducer,
     deleteProductReducer,
     changeDeliveryStatusReducer,
@@ -47,7 +51,8 @@ const allReducers = combineReducers({
     deleteUserAddressReducer,
     getAllOrdersReducer,
     mpesaCallbackHandlerReducer,
-    mpesaStkPushReducer
+    mpesaStkPushReducer,
+    cart: cartReducer
 })
 
 export default allReducers

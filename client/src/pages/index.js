@@ -7,8 +7,6 @@ import img1 from '../../public/images/gallery/gaming1.jpg'
 import img2 from '../../public/images/gallery/pexels3.jpg'
 import Image from 'next/image'
 import Logos from '../components/Logos'
-import { fadeIn, slideIn } from '../../variants'
-import { motion } from 'framer-motion'
 import Shopnow from '../components/Button'
 import Footer from '../components/Footer'
 import Link from 'next/link'
@@ -38,7 +36,7 @@ const Index = () => {
                   Unleash Infinite <span className='text-accent'>Possibilities</span>
                 </h1>
                 <p className='font-medium text-light text-4xl pl-10 pt-5'>Explore The Best Accessories At your Fingertips </p>
-                <Link href='/shop' className='pl-20'>
+                <Link href='/ProductListPage' className='pl-20'>
                 <Shopnow />
                 </Link>
               
@@ -64,7 +62,7 @@ const Index = () => {
               src={img}
               alt='img'
               className='w-full max-w-xl mx-auto h-[300px] rounded-[2rem]'/>
-              <Link href='/shop' className='pl-20'>
+              <Link href='/ProductListPage' className='pl-20'>
                 <Shopnow />
                 </Link>
               

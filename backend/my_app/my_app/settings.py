@@ -17,6 +17,12 @@ import environ
 import requests
 from requests.auth import HTTPBasicAuth
 
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+
+
 env = environ.Env(DEBUG=(bool, False))
 
 # reading .env file
@@ -44,6 +50,7 @@ INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
+    'user_sessions',
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
@@ -57,6 +64,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'user_sessions.middleware.SessionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',                    # CORS
     'django.middleware.common.CommonMiddleware',
@@ -97,6 +105,9 @@ DATABASES = {
     }
 }
 
+SESSION_ENGINE = 'user_sessions.backends.db'
+
+CART_SESSION_ID ='cart'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

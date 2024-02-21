@@ -17,36 +17,52 @@ logging = logging.getLogger("default")
 
 # The token received will expire after about 3599 seconds. So we’ll need to renew it every time it’s about to expire. We’ll write a decorator class that would allow us to do just that. Then we’ll just add the decorator to methods that need to use the access_token.
 
+import logging
+import time
+from datetime import datetime
+import requests
+from requests.auth import HTTPBasicAuth
+from my_app.settings import env
+import environ
+import base64
+import math
+from account.models import TransactionModel
+from account.serializers import TransactionListSerializer
+from phonenumber_field.phonenumber import PhoneNumber
+from rest_framework.response import Response
+
+env = environ.Env()
+logging = logging.getLogger("default")
+
 class MpesaGateway:
-    shortcode =None
-    consumer_key= None
-    consumer_secret=None
-    access_token_url=None
-    access_token= None
-    access_token_expiration= None
+    shortcode = None
+    consumer_key = None
+    consumer_secret = None
+    access_token_url = None
+    access_token = None
+    access_token_expiration = None
+    timestamp = None
 
     def __init__(self):
-        now= datetime.now()
-        self.shortcode=env("shortcode")
-        self.consumer_key=env("consumer_key")
-        self.consumer_secret=env("consumer_secret")
-        self.access_token_url=env("access_token_url")
-
+        self.shortcode = env("shortcode")
+        self.consumer_key = env("consumer_key")
+        self.consumer_secret = env("consumer_secret")
+        self.access_token_url = env("access_token_url")
+        self.test_c2b_shortcode = env('test_c2b_shortcode')
 
         try:
-            self.access_token=self.getAccessToken()
+            self.access_token = self.getAccessToken()
             if self.access_token is None:
                 raise Exception("Request for access token failed")
-            
         except Exception as e:
             logging.error("Error {}".format(e))
-
         else:
             self.access_token_expiration = time.time() + 3400
+            self.timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
 
     def getAccessToken(self):
         try:
-            res =  requests.get(
+            res = requests.get(
                 self.access_token_url,
                 auth=HTTPBasicAuth(self.consumer_key, self.consumer_secret),
             )
@@ -54,75 +70,71 @@ class MpesaGateway:
             logging.error("Error {}".format(err))
             raise err
         else:
-            token=res.json()["access_token"]
-            self.headers = {"Authorization": "Bearer %s" % token}
+            token = res.json()["access_token"]
             return token
-        
-    class  Decorators:
-        @staticmethod
-        def refreshToken(decorated):
-            def wrapper(gateway, *args, **kwargs):
-                if(
-                    gateway.access_token_expiration
-                    and time.time() > gateway.access_token_expiration
-                ):
-                    token = gateway.getAccessToken()
-                    gateway.access_token = token
-                return decorated(gateway, *args, **kwargs)
-            
-            return wrapper
-        
 
-# Now that we have the token, we can initiate the payment request. We'll call the mrthod stk_push_request.
-# For that request, we'll need to generate a password and then make a post request 
-        
+    @staticmethod
     def generate_password(shortcode, passkey, timestamp):
-        """Generate mpesa api password using the provided shortcode and passkey"""
-        password_str= shortcode + passkey + timestamp
-        password_bytes= password_str.encode("ascii")
+        password_str = f"{shortcode}{passkey}{timestamp}"
+        password_bytes = password_str.encode("ascii")
         return base64.b64encode(password_bytes).decode("utf-8")
-    
-    @Decorators.refreshToken
-    def stk_push_request(self, payload):
-        request=payload["request"]
-        data = payload["data"]
-        amount= payload["amount"]
-        phone_number = data["phone_number"] #A valid phone number with the format 254000000
-        desc = data["description"] #THis can be anything but not blank
-        reference = data["reference"] #anything but not blank
 
-        # The shortcode and passkey values below are the test credentials availed by safaricom
-        shortcode = ["174379"]
+    @staticmethod
+    def refresh_token(decorated):
+        def wrapper(gateway, *args, **kwargs):
+            if gateway.access_token_expiration and time.time() > gateway.access_token_expiration:
+                token = gateway.getAccessToken()
+                gateway.access_token = token
+            return decorated(gateway, *args, **kwargs)
+        return wrapper
+
+    @refresh_token
+    def stk_push_request(self, payload):
+        logging.info("Received payload: {}".format(payload))
+
+        api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+        data = payload["data"]
+        amount = data["amount"]
+        phone_number = data["phone_number"]
         passkey = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
-        timestamp = datetime.now.strftime("%Y%m%d%H%M%S")
+        password = self.generate_password(self.shortcode, passkey, self.timestamp)
         req_data = {
+            "TestC2BShortcode": self.test_c2b_shortcode,
             "BusinessShortCode": self.shortcode,
-            "Password": self.password,
+            "Password": password,
             "Timestamp": self.timestamp,
             "TransactionType": "CustomerPayBillOnline",
-            "Amount": math.ceil(float(amount)),
+            "Amount": amount,
             "PartyA": phone_number,
             "PartyB": self.shortcode,
             "PhoneNumber": phone_number,
-            "CallBackURL": self.c2b_callback,
+            "CallBackURL": "https://sandbox.safaricom.co.ke/mpesa/",  # Add your callback URL here
             "AccountReference": "Test",
             "TransactionDesc": "Test",
         }
 
-        res = requests.post(
-            self.checkout_url, json=req_data, headers=self.headers, timeout=30
-        )
-        res_data = res.json()
-        logging.info("Mpesa request data{}".format(req_data))
-        logging.info("MPesa response info {}".format(res_data))
+        try:
+            res = requests.post(
+                api_url,
+                json=req_data,
+                headers={"Authorization": f"Bearer {self.access_token}"},
+                timeout=30
+            )
+            res_data = res.json()
+            logging.info("Mpesa request data{}".format(req_data))
+            logging.info("MPesa response info {}".format(res_data))
 
-        if res.ok:
-            data["ip"] = request.META.get("REMOTE_ADDR")
-            data["checkout_request_id"] = res_data["CheckoutRequestID"]
+            if res.ok:
+                request = payload.get("request")
+                if request:
+                    data["ip"] = request.META.get("REMOTE_ADDR")
+                data["checkout_request_id"] = res_data.get("CheckoutRequestID")
+                TransactionModel.objects.create(**data)
+            return res_data
+        except Exception as e:
+            logging.error("Error: {}".format(e))
+            return {"error": str(e)}
 
-            TransactionModel.objects.create(**data)
-        return res_data
-    
     # Now lets handle the callback. We are going to keep it simple. We won’t do error handling for the different types of failures such as invalid phone number (number that is not an mpesa number), or if the users phone is off etc. We simply generally handle failure and success.
 
     def check_status(self, data):

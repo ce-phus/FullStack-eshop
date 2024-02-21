@@ -7,6 +7,7 @@ import logo from '../../public/images/gallery/logo6.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../actions/userActions';
 import  Dropdown  from './Dropdown';
+import { addToCart } from '../actions/cartActions';
 
 const CustomLink = ({ href, title, className }) => {
   const router = useRouter();
@@ -64,6 +65,17 @@ const Navbar = () => {
   const userLoginReducer = useSelector(state => state.userLoginReducer)
   const { userInfo } = userLoginReducer
 
+  // add to cart reducer
+  const cartItems = useSelector(state => state.cartReducer.cartItems); // Assuming cartItems are stored under cart in the Redux state
+
+  const handleAddToCart = (id, name, price) => {
+    // Dispatch the addToCart action with the product details
+    const product = { id, name, price };
+    dispatch(addToCart(product));
+  };
+  
+
+
   // logout
   const logoutHandler = ()=>{
     dispatch (logout()) //action
@@ -82,7 +94,7 @@ const Navbar = () => {
       <Image
         src={logo}
         alt='logo'
-        className='w-[100px] h-[90px] rounded-full bg-dark'
+        className='w-[50px] h-[50px] rounded-full bg-dark'
       />
       <button
         className='flex-col  items-center justify-center hidden lg:flex'
@@ -104,6 +116,22 @@ const Navbar = () => {
           }`}
         ></span>
       </button>
+
+      {/* SVG icon for Add to Cart */}
+      <svg
+  xmlns='http://www.w3.org/2000/svg'
+  className='h-6 w-6 cursor-pointer'
+  fill='none'
+  viewBox='0 0 24 24'
+  stroke='currentColor'
+  onClick={() => handleAddToCart(product.id, product.name, product.price)} // Pass dynamic product details
+>
+  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M12 6v6m0 0v6m0-6h6m-6 0H6' />
+</svg>
+
+      {/* Display the number of items in the cart */}
+      <div className='ml-2 text-light'>{cartItems.length}</div>
+
 
       <div className='w-full flex justify-end items-center lg:hidden text-light'>
         <nav className='flex items-center justify-center flex-wrap font-bold text-light'>

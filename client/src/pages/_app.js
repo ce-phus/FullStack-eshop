@@ -4,6 +4,9 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Navbar from '../components/Navbar'
 import { Provider } from 'react-redux'
+import HorizontalNavbar from '../components/HorizontalNavbar'
+import SideNav from '../components/SideNav'
+import { useState } from 'react'
 import store from './store'
 
 const montserrat = Montserrat({
@@ -13,6 +16,11 @@ const montserrat = Montserrat({
 
 export default function App({ Component, pageProps }) {
   const router = useRouter()
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
     <>
@@ -22,7 +30,9 @@ export default function App({ Component, pageProps }) {
       </Head>
       <main className={`${montserrat.variable} font-mont bg-dark w-full min-h-screen`}>
         <Provider store={store}>
-          <Navbar />
+          {/* <Navbar /> */}
+          <HorizontalNavbar toggleSidebar={toggleSidebar} />
+          <SideNav isSidebarOpen={isSidebarOpen} />
           <Component key={router.asPath} {...pageProps} />
         </Provider>
       </main>

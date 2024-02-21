@@ -33,53 +33,44 @@ function LoginPage() {
   };
 
   return (
-    <div className='bg-dark text-light  flex items-center justify-center'>
-      <Row className='justify-content-md-center'>
-        <Col xs={12} md={6} className='bg-[#000220] border border-light/45 border-[1] px-5 py-8 rounded'>
-          <h1 className='text-2xl mb-5 font-semibold'>Sign In</h1>
+    <div className='text-light mt-12 grid h-screen place-items-center'>
+      <div className='justify-content-md-center'>
+      <div className='grid justify-items-center'>
+          <h1 className='text-2xl mb-5 font-semibold text-light'>Sign In</h1>
           {error && <Message variant='danger'>{error}</Message>}
-          <Form onSubmit={submitHandler} className='max-w-sm mx-auto'>
-            <Form.Group controlId='username'>
-              <Form.Label className='mb-2 text-sm font-medium text-light mr-3'>
-                Username
-              </Form.Label>
-              <Form.Control
-                type='text'
-                placeholder='Enter username'
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className='input-field bg-light/55 border rounded mb-3'
-              />
-            </Form.Group>
+          <form className='max-w-sm mx-auto' onSubmit={submitHandler}>
+            <div className='mb-5'>
+              <label for='username' className='block mb-2 text-sm font-medium text-light'>Username</label>
+              <input className='bg-gray-700 block border border-gray-600 w-full placeholder-gray-400 text-light focus:ring-blue-500 focus:border-blue-500 rounded-lg text-sm p-2.5' type='username' placeholder='enter username' value={username} onChange={(e) => setUsername(e.target.value)}></input>
+            </div>
 
-            <Form.Group controlId='password'>
-              <Form.Label className='mb-2 text-sm font-medium mr-4 text-light'>
-                Password
-              </Form.Label>
-              <Form.Control
-                type='password'
-                placeholder='Enter your password'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className='input-field bg-light/55 mb-5 border rounded'
-              />
-            </Form.Group>
-
-            <Button type='submit' variant='primary' className='submit-button border border-1 border-light/20 p-1 rounded-lg bg-blue-700 hover:bg-blue-500'>
+            <div className='mb-5'>
+              <label for='username' className='block mb-2 text-sm font-medium text-light'>Password</label>
+              <input className='bg-gray-700 block border border-gray-600 w-full placeholder-gray-400 text-light focus:ring-blue-500 focus:border-blue-500 rounded-lg text-sm p-2.5' type='password' placeholder='enter password' value={password} onChange={(e) => setPassword(e.target.value)}></input>
+            </div>
+            <button type='submit' className='text-light focus:ring-blue-800 hover:bg-blue-700 bg-blue-600 text-center px-5 py-2.5 sm:auto rounded-lg'>
               Sign In
-            </Button>
-          </Form>
+            </button>
+          </form>
 
-          <Row className='py-3'>
-            <Col>
-              Do not have an account?{' '}
-              <Link href={`/RegisterPage`} className='text-blue-500 dark:text-blue-400'>
-                 Register
+          <div className='flex flex-col text-light'>
+
+            <div className='mt-10'>
+              Do not have an account?
+            </div>
+            <div className='flex flex-row-reverse mt-3'>
+
+              <Link href='/RegisterPage'>
+              <button className='text-light bg-blue-600  hover:bg-blue-700 text-center rounded-lg p-3 sm:auto'>
+              Register
+            </button>
               </Link>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+            
+            </div>
+            
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
