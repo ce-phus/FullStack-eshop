@@ -126,7 +126,7 @@ class CartAPIView(APIView):
                 cart.add(
                     product=product["product"],
                     quantity=product["quantity"],
-                    overide_quantity=product.get("override_quantity", False)  # Correct typo: 'override_quantity'
+                    overide_quantity=product.get("override_quantity", False)  
                 )
                 return self.get(request)  # Return updated cart data
             else:

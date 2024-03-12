@@ -1,23 +1,4 @@
 import logging
-import time 
-from datetime import datetime
-import requests
-from requests.auth import HTTPBasicAuth
-from my_app.settings import env
-import environ
-import base64
-import math
-from account.models import TransactionModel
-from account.serializers import TransactionListSerializer
-from phonenumber_field.phonenumber import PhoneNumber
-from rest_framework.response import Response
-
-env = environ.Env()
-logging = logging.getLogger("default")
-
-# The token received will expire after about 3599 seconds. So we’ll need to renew it every time it’s about to expire. We’ll write a decorator class that would allow us to do just that. Then we’ll just add the decorator to methods that need to use the access_token.
-
-import logging
 import time
 from datetime import datetime
 import requests

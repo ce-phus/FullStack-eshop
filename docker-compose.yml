@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend/my_app
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app
+      - ./backend/db.sqlite3:/app/db.sqlite3
+    ports:
+      - "8000:8000"  # Corrected indentation and added space after colon
+    env_file:
+      - ./backend/my_app/my_app/.env
+    networks:
+      - e-commerce
+
+  client:
+    build:
+      context: ./client/docker
+      dockerfile: Dockerfile.dev
+    restart: on-failure
+    volumes:
+      - ./client:/app
+    networks:
+      - e-commerce
+
+  nginx:
+    restart: always
+    depends_on:
+      - backend
+    build:
+      context: ./backend/my_app/docker/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    networks:
+      - e-commerce
+
+networks:
+  e-commerce:
+    driver: bridge
