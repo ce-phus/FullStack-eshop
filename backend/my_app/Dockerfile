@@ -20,8 +20,11 @@ RUN pip3 install --upgrade pip
 
 # Adjust the COPY instruction to correctly copy requirements.txt
 COPY ./requirements.txt ${APP_HOME}/requirements.txt
+COPY ./static /app/staticfiles
 
 RUN pip3 install -r requirements.txt
+RUN pip3 install django-user-sessions
+RUN pip3 install django-cors-headers
 
 COPY . /app/
 

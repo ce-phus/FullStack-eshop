@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeFromCart, getTotalPrice } from '../actions/cartActions';
+import { removeFromCart } from '../actions/cartActions';
 import BuyButton from './BuyButton';
 import Link from 'next/link';
 
@@ -12,9 +12,9 @@ const CartDropdown = () => {
   // Calculate total price by summing up cart_total_price of each entry in cartItems
   const totalPrice = cartItems.reduce((acc, curr) => acc + curr.cart_total_price, 0);
 
-  useEffect(() => {
-    dispatch(getTotalPrice());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getTotalPrice());
+  // }, [dispatch]);
 
   const [isOpen, setIsOpen] = useState(false);
 

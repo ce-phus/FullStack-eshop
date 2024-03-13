@@ -87,20 +87,20 @@ export const removeFromCart = (productId) => async (dispatch) => {
 
 
 
-export const getTotalPrice = () => async (dispatch) => {
-    try {
-        dispatch({ type: GET_TOTAL_PRICE_REQUEST });
+// export const getTotalPrice = () => async (dispatch) => {
+//     try {
+//         dispatch({ type: GET_TOTAL_PRICE_REQUEST });
 
-        const { data } = await axios.get('http://127.0.0.1:8000/api/cart/');
+//         const { data } = await axios.get('http://127.0.0.1:8000/api/cart/');
 
-        dispatch({
-            type: GET_TOTAL_PRICE_SUCCESS,
-            payload: data.cart_total_price
-        });
-    } catch (error) {
-        dispatch({
-            type: GET_TOTAL_PRICE_FAIL,
-            payload: error.response.data.detail || error.message
-        });
-    }
-};
+//         dispatch({
+//             type: GET_TOTAL_PRICE_SUCCESS,
+//             payload: data.cart_total_price
+//         });
+//     } catch (error) {
+//         dispatch({
+//             type: GET_TOTAL_PRICE_FAIL,
+//             payload: error.response.data.detail || error.message
+//         });
+//     }
+// };
