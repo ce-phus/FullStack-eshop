@@ -15,7 +15,7 @@
   <a href="https://youtu.be/RG_Y7lIDXPM"><img src="https://github.com/justdjango/django-react-ecommerce/blob/master/thumbnail.png" width="290"></a>
 </p>
 
-This repository contains a Django and React ecommerce project. Among other functionality, users can create their account, add items to their cart and purchase those items using Daraja API.
+This repository contains a Django and Next js ecommerce project. Among other functionality, users can create their account, add items to their cart and purchase those items using Daraja API.
 In the application you can run the application with one port `localhost:8080`, which uses NGINX a reverse proxy config that connnects the frontend to the backend docker containers 
 
 ## Backend development workflow
