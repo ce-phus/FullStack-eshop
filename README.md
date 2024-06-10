@@ -33,7 +33,7 @@ python manage.py runserver
 ```json
 cd client
 npm i
-npm start
+npm run dev
 ```
 
 ## For deploying
