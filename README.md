@@ -15,43 +15,79 @@
   <a href="https://youtu.be/RG_Y7lIDXPM"><img src="https://github.com/justdjango/django-react-ecommerce/blob/master/thumbnail.png" width="290"></a>
 </p>
 
-This repository contains a Django and Next js ecommerce project. Among other functionality, users can create their account, add items to their cart and purchase those items using Daraja API.
-In the application you can run the application with one port `localhost:8080`, which uses NGINX a reverse proxy config that connnects the frontend to the backend docker containers 
+This is a full-featured e-commerce application built using Docker, Nginx, Next.js, and Django. The project is containerized using Docker and managed with Docker Compose.
 
-## Backend development workflow
+## Technologies Used
+- `Docker`: A platform to develop, ship, and run applications inside containers.
+- `Nginx`: A web server used as a reverse proxy to manage requests to the Next.js and Django applications.
+- `Next.js`: A React framework for building server-side rendered and statically generated applications.
+- `Django`: A high-level Python web framework that encourages rapid development and clean, pragmatic design.
 
-```json
-cd backend
-virtualenv venv
-source env/bin/activate
-pip install -r requirements.txt
-python manage.py runserver
+## Project Structure
+
+```php
+  project-root/
+├── backend/
+│   ├── my_app/
+│   │   ├── Dockerfile         # Dockerfile for the Django application
+│   │   ├── requirements.txt   # Python dependencies
+│   │   ├── start              # Script to start the Django application
+│   │   └── ...                # Other backend files
+├── client/
+│   ├── Dockerfile.dev         # Dockerfile for the Next.js application
+│   ├── package.json           # Node.js dependencies
+│   ├── .dockerignore          # Files to ignore in the Docker build context
+│   └── ...                    # Other frontend files
+├── docker-compose.yml          # Docker Compose configuration
+└── nginx/
+    ├── default.conf           # Nginx configuration
+    └── Dockerfile             # Dockerfile for the Nginx server
 ```
 
-## Frontend development workflow
 
-```json
-cd client
-npm i
-npm run dev
+## Getting Started
+
+# Prerequisites
+
+- `Docker`
+- `Docker Compose`
+
+## Installation 
+
+1. `Clone the repository:`
+```sh
+  git clone https://github.com/ce-phus/FullStack-eshop.git
+  cd FullStack-eshop
+
 ```
-
-## For deploying
-
-```json
-npm run build
+2. `Build and start the containers:`
+```sh
+  make build
 ```
-
----
-
-## Run with Docker
-
-```json
-install docker
-make collectstatic - to collect static files
-Run make build 
-navigate to port localhost:8080 in browser
+3. `Apply migrations:`
+```sh
+  make migrate
 ```
+4. `Create a superuser:`
+```sh
+  make superuser
+```
+5. `Access the application:`
+
+Open your browser and go to http://localhost:8080. Nginx will forward the requests to the appropriate service based on the URL path.
+
+## Configuration
+
+# Docker Compose
+The docker-compose.yml file defines the services, networks, and volumes used in the project.
+
+# Nginx Configuration
+The nginx/default.conf file configures Nginx to act as a reverse proxy, forwarding requests to the appropriate service based on the URL path.
+
+# Django Settings
+Ensure that the Django settings are correctly configured, including the database settings, allowed hosts, and static files configuration.
+
+
 
 ### Mpesa Sandbox Config (Daraja API)
 
