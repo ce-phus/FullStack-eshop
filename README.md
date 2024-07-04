@@ -12,7 +12,7 @@
 # Django Nextjs 13 Ecommerce
 
 <p align="center">
-  <a href="https://youtu.be/RG_Y7lIDXPM"><img src="https://github.com/justdjango/django-react-ecommerce/blob/master/thumbnail.png" width="290"></a>
+  ![plot](./client/public/assets/eshop.png)
 </p>
 
 This is a full-featured e-commerce application built using Docker, Nginx, Next.js, and Django. The project is containerized using Docker and managed with Docker Compose.
